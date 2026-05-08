@@ -2,6 +2,7 @@ package com.proyecto.encriptacion.service.impl;
 
 import com.proyecto.encriptacion.dto.ProductResponseDto;
 import com.proyecto.encriptacion.dto.ProductoRequestDto;
+import com.proyecto.encriptacion.entity.Md5Ruta;
 import com.proyecto.encriptacion.entity.Producto;
 import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;
 import com.proyecto.encriptacion.mapper.ProductoMapper;
@@ -15,11 +16,11 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
     private ProductoRepository productoRepository;
-    private final Md5HashServiceImpl md5HashServiceImpl;
+    private final Md5RutaService md5RutaService;
 
-    public ProductoServiceImpl(ProductoRepository repo, Md5HashServiceImpl md5HashServiceImpl) {
+    public ProductoServiceImpl(ProductoRepository repo, Md5RutaService md5RutaService) {
         productoRepository = repo;
-        this.md5HashServiceImpl = md5HashServiceImpl;
+        this.md5RutaService = md5RutaService;
     }
 
     @Override
@@ -27,10 +28,13 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = ProductoMapper.toEntity(dto);
         Producto guardado = productoRepository.save(producto);
 
-        String rutaBase = request.getRequestURI()
+        String rutaReal = request.getRequestURI()
                 .replaceAll("/$", "");
 
-        md5HashServiceImpl.crearMapping(guardado.getId(), rutaBase);
+        Md5Ruta ruta = md5RutaService
+                .obtenerOCrearRuta(rutaReal);
+
+        md5RutaService.agregarId(ruta, guardado.getId());
 
         return ProductoMapper.toResponseDto(guardado);
     }

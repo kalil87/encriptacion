@@ -1,8 +1,11 @@
 package com.proyecto.encriptacion.filter;
 
-import com.proyecto.encriptacion.entity.Md5Hash;
-import com.proyecto.encriptacion.repository.Md5HashRepository;
+import com.proyecto.encriptacion.entity.Md5Id;
+import com.proyecto.encriptacion.entity.Md5Ruta;
+import com.proyecto.encriptacion.repository.Md5IdRepository;
+import com.proyecto.encriptacion.repository.Md5RutaRepository;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,73 +13,70 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class HashRoutingFilter extends OncePerRequestFilter {
+    private final Md5RutaRepository rutaRepository;
+    private final Md5IdRepository idRepository;
 
-    private final Md5HashRepository repository;
-
-    public HashRoutingFilter(Md5HashRepository repository) {
-        this.repository = repository;
+    public HashRoutingFilter(Md5RutaRepository rutaRepository, Md5IdRepository idRepository) {
+        this.rutaRepository = rutaRepository;
+        this.idRepository = idRepository;
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        String path = request.getRequestURI();
+        String uri = request.getRequestURI();
 
-        if (path.startsWith("/api") || path.contains(".")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String[] partes = uri.split("/");
 
-        String[] parts = path.substring(1).split("/");
 
-        if (parts.length == 1) {
+        if (partes.length >= 2) {
 
-            String rutaHash = parts[0];
+            String rutaHash = partes[1];
 
-            Md5Hash mapping = repository.findByRutaHash(rutaHash);
+            Optional<Md5Ruta> rutaOpt = rutaRepository.findByRutaHash(rutaHash);
 
-            if (mapping == null) {
-                response.setStatus(404);
-                return;
+            if (rutaOpt.isPresent()) {
+
+                Md5Ruta ruta = rutaOpt.get();
+
+
+                if (partes.length == 2) {
+
+                    RequestDispatcher dispatcher = request.getRequestDispatcher(ruta.getRutaReal());
+
+                    dispatcher.forward(request, response);
+
+                    return;
+                }
+
+
+                if (partes.length == 3) {
+
+                    String idHash = partes[2];
+
+                    Optional<Md5Id> idOpt = idRepository.findByIdHash(idHash);
+
+                    if (idOpt.isPresent()) {
+
+                        Md5Id md5Id = idOpt.get();
+
+                        String nuevaRuta = ruta.getRutaReal() + "/" + md5Id.getEntidadId();
+
+                        RequestDispatcher dispatcher = request.getRequestDispatcher(nuevaRuta);
+
+                        dispatcher.forward(request, response);
+
+                        return;
+                    }
+                }
             }
-
-            String realPath = mapping.getRutaReal();
-
-            request.getRequestDispatcher(realPath)
-                    .forward(request, response);
-
-            return;
         }
 
-        if (parts.length == 2) {
-
-            String rutaHash = parts[0];
-            String idHash = parts[1];
-
-            Md5Hash mapping =
-                    repository.findByRutaHashAndIdHash(rutaHash, idHash);
-
-            if (mapping == null) {
-                response.setStatus(404);
-                return;
-            }
-
-            String realPath =
-                    mapping.getRutaReal() + "/" + mapping.getEntidadId();
-
-            request.getRequestDispatcher(realPath)
-                    .forward(request, response);
-
-            return;
-        }
-
-        response.setStatus(404);
+        filterChain.doFilter(request, response);
     }
 }
