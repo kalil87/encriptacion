@@ -27,6 +27,17 @@ public class ManejoGlobalExcepciones {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CifradoInvalidoException.class)
+    public ResponseEntity<RespuestaError> manejarCifradoInvalido(CifradoInvalidoException ex) {
+
+        RespuestaError error = new RespuestaError(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     /**
      * Maneja errores de validación de @Valid en request body.
      * Retorna 400 BAD REQUEST con detalles de campos inválidos.
