@@ -7,6 +7,7 @@ import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;
 import com.proyecto.encriptacion.mapper.ProductoMapper;
 import com.proyecto.encriptacion.repository.ProductoRepository;
 import com.proyecto.encriptacion.service.ProductoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +15,23 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
     private ProductoRepository productoRepository;
+    private final Md5HashServiceImpl md5HashServiceImpl;
 
-    public ProductoServiceImpl(ProductoRepository repo) {
+    public ProductoServiceImpl(ProductoRepository repo, Md5HashServiceImpl md5HashServiceImpl) {
         productoRepository = repo;
+        this.md5HashServiceImpl = md5HashServiceImpl;
     }
 
     @Override
-    public ProductResponseDto crear(ProductoRequestDto dto) {
+    public ProductResponseDto crear(ProductoRequestDto dto, HttpServletRequest request) {
         Producto producto = ProductoMapper.toEntity(dto);
         Producto guardado = productoRepository.save(producto);
+
+        String rutaBase = request.getRequestURI()
+                .replaceAll("/$", "");
+
+        md5HashServiceImpl.crearMapping(guardado.getId(), rutaBase);
+
         return ProductoMapper.toResponseDto(guardado);
     }
 

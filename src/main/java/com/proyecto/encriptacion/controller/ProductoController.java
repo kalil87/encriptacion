@@ -3,6 +3,7 @@ package com.proyecto.encriptacion.controller;
 import com.proyecto.encriptacion.dto.ProductResponseDto;
 import com.proyecto.encriptacion.dto.ProductoRequestDto;
 import com.proyecto.encriptacion.service.ProductoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,8 @@ public class ProductoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {
-        return productoService.crear(dto);
+    public ProductResponseDto crear(@Valid @RequestBody ProductoRequestDto dto, HttpServletRequest request) {
+        return productoService.crear(dto, request);
     }
 
     @GetMapping

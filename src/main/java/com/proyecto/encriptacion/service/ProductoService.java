@@ -2,12 +2,13 @@ package com.proyecto.encriptacion.service;
 
 import com.proyecto.encriptacion.dto.ProductResponseDto;
 import com.proyecto.encriptacion.dto.ProductoRequestDto;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 public interface ProductoService {
 
-    ProductResponseDto crear(ProductoRequestDto dto);
+    ProductResponseDto crear(ProductoRequestDto dto, HttpServletRequest request);
 
     List<ProductResponseDto> listar(String nombre);
 
