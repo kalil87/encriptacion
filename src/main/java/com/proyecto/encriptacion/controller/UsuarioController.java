@@ -6,6 +6,7 @@ import com.proyecto.encriptacion.dto.request.UsuarioUpdateRequest;
 import com.proyecto.encriptacion.dto.response.UsuarioActualizadoResponse;
 import com.proyecto.encriptacion.dto.response.UsuarioResponse;
 import com.proyecto.encriptacion.service.impl.UsuarioServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> create(@RequestBody @Valid UsuarioCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
+    public ResponseEntity<UsuarioResponse> create(@RequestBody @Valid UsuarioCreateRequest dto, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto, request));
     }
 
     @PostMapping("/login")
