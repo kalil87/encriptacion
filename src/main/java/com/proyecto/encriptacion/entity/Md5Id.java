@@ -21,7 +21,7 @@ public class Md5Id {
     @Column(nullable = false)
     private Long entidadId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String idHash;
 
     @ManyToOne

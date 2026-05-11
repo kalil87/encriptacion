@@ -67,7 +67,7 @@ public class HashRoutingFilter extends OncePerRequestFilter {
 
                     String idHash = partes[1];
 
-                    Optional<Md5Id> idOpt = idRepository.findByIdHash(idHash);
+                    Optional<Md5Id> idOpt = idRepository.findFirstByIdHash(idHash);
 
                     if (idOpt.isPresent()) {
 

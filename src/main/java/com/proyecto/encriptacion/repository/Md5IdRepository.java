@@ -9,6 +9,8 @@ import java.util.Optional;
 @Repository
 public interface Md5IdRepository extends JpaRepository<Md5Id, Long> {
 
+    Optional<Md5Id> findFirstByIdHash(String hash);
+
     Optional<Md5Id> findByIdHash(String idHash);
 
     Optional<Md5Id> findByEntidadId(Long entidadId);
