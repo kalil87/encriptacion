@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/encriptacion/frutas")
+@RequestMapping("/api/encriptacion/productos")
 public class ProductoController {
     private final ProductoService productoService;
 
@@ -21,8 +21,8 @@ public class ProductoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponseDto crear(@Valid @RequestBody ProductoRequestDto dto, HttpServletRequest request) {
-        return productoService.crear(dto, request);
+    public ProductResponseDto crear(@Valid @RequestBody ProductoRequestDto dto) {
+        return productoService.crear(dto);
     }
 
     @GetMapping
