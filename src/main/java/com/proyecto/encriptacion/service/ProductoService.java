@@ -1,7 +1,7 @@
 package com.proyecto.encriptacion.service;
 
-import com.proyecto.encriptacion.dto.ProductResponseDto;
-import com.proyecto.encriptacion.dto.ProductoRequestDto;
+import com.proyecto.encriptacion.dto.response.ProductResponseDto;
+import com.proyecto.encriptacion.dto.request.ProductoRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;

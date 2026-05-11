@@ -1,7 +1,7 @@
 package com.proyecto.encriptacion.service.impl;
 
-import com.proyecto.encriptacion.dto.ProductResponseDto;
-import com.proyecto.encriptacion.dto.ProductoRequestDto;
+import com.proyecto.encriptacion.dto.response.ProductResponseDto;
+import com.proyecto.encriptacion.dto.request.ProductoRequestDto;
 import com.proyecto.encriptacion.entity.Md5Ruta;
 import com.proyecto.encriptacion.entity.Producto;
 import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;

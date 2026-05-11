@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class EncriptacionApplication {
 
     public static void main(String[] args) {
-        String texto = "6";
+        String texto = "/api/encriptacion/usuarios/login";
         System.out.println("*** Conversion del texto '" + texto + "' en hash ***");
         System.out.println(generarMd5(texto));
         SpringApplication.run(EncriptacionApplication.class, args);
