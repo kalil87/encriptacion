@@ -3,6 +3,7 @@ package com.proyecto.encriptacion.controller;
 import com.proyecto.encriptacion.dto.request.UsuarioCreateRequest;
 import com.proyecto.encriptacion.dto.request.UsuarioLoginRequest;
 import com.proyecto.encriptacion.dto.request.UsuarioUpdateRequest;
+import com.proyecto.encriptacion.dto.response.UsuarioActualizadoResponse;
 import com.proyecto.encriptacion.dto.response.UsuarioResponse;
 import com.proyecto.encriptacion.service.impl.UsuarioServiceImpl;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> update(@PathVariable Long id, @RequestBody @Valid UsuarioUpdateRequest request) {
+    public ResponseEntity<UsuarioActualizadoResponse> update(@PathVariable Long id, @RequestBody @Valid UsuarioUpdateRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 }

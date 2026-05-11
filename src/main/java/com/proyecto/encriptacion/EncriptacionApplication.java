@@ -1,20 +1,31 @@
 package com.proyecto.encriptacion;
 
 import com.proyecto.encriptacion.utils.SistemaNumeracion;
+import com.proyecto.encriptacion.utils.TipoHashPassword;
 import com.proyecto.encriptacion.utils.VariantesHash;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
 
 @SpringBootApplication
 public class EncriptacionApplication {
+    private static final PasswordEncoder encoder = TipoHashPassword.BCRYPT;
 
     public static void main(String[] args) {
         String texto = "/api/encriptacion/usuarios/login";
         System.out.println("*** Conversion del texto '" + texto + "' en hash ***");
         System.out.println(generarMd5(texto));
+
+        String encriptada = encoder.encode(texto);
+        System.out.println("\n*** Conversion del texto '" + texto + "' en hash password ***");
+        System.out.println(encriptada);
+
+        System.out.println("\n*** matcheador del texto '" + texto + "' en hash password ***");
+        System.out.println(encoder.matches(texto, encriptada));
+
         SpringApplication.run(EncriptacionApplication.class, args);
     }
 

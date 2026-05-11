@@ -3,6 +3,7 @@ package com.proyecto.encriptacion.service.impl;
 import com.proyecto.encriptacion.dto.request.UsuarioCreateRequest;
 import com.proyecto.encriptacion.dto.request.UsuarioLoginRequest;
 import com.proyecto.encriptacion.dto.request.UsuarioUpdateRequest;
+import com.proyecto.encriptacion.dto.response.UsuarioActualizadoResponse;
 import com.proyecto.encriptacion.dto.response.UsuarioResponse;
 import com.proyecto.encriptacion.entity.Usuario;
 import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;
@@ -42,20 +43,23 @@ public class UsuarioServiceImpl {
         return mapper.toDto(saved);
     }
 
-    public UsuarioResponse update(Long id, UsuarioUpdateRequest request) {
+    public UsuarioActualizadoResponse update(Long id, UsuarioUpdateRequest request) {
 
         Usuario usuario = repo.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no registrado"));
 
         mapper.updateEntity(request, usuario);
 
+        boolean passwordActualizado = false;
+
         if (request.password() != null) {
             usuario.setPassword(encoder.encode(request.password()));
+            passwordActualizado = true;
         }
 
         Usuario updated = repo.save(usuario);
 
-        return mapper.toDto(updated);
+        return mapper.toDto(updated, passwordActualizado);
     }
 
     public UsuarioResponse login(UsuarioLoginRequest request) {

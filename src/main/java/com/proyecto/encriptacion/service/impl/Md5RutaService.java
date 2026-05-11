@@ -48,7 +48,7 @@ public class Md5RutaService {
     private String generarMd5(String texto) {
 
         try {
-            MessageDigest md5 = MessageDigest.getInstance(VariantesHash.SHA_256);
+            MessageDigest md5 = MessageDigest.getInstance(VariantesHash.MD5);
 
             byte[] bytes = md5.digest(texto.getBytes());
 
