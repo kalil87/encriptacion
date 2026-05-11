@@ -16,22 +16,15 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
     private ProductoRepository productoRepository;
-    private final Md5RutaService md5RutaService;
 
-    public ProductoServiceImpl(ProductoRepository repo, Md5RutaService md5RutaService) {
+    public ProductoServiceImpl(ProductoRepository repo) {
         productoRepository = repo;
-        this.md5RutaService = md5RutaService;
     }
 
     @Override
-    public ProductResponseDto crear(ProductoRequestDto dto, HttpServletRequest request) {
+    public ProductResponseDto crear(ProductoRequestDto dto) {
         Producto producto = ProductoMapper.toEntity(dto);
         Producto guardado = productoRepository.save(producto);
-
-        String rutaReal = request.getRequestURI().replaceAll("/$", "");
-        Md5Ruta ruta = md5RutaService.obtenerOCrearRuta(rutaReal);
-
-        md5RutaService.agregarId(ruta, guardado.getId());
 
         return ProductoMapper.toResponseDto(guardado);
     }

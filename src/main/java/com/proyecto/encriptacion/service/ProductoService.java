@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductoService {
 
-    ProductResponseDto crear(ProductoRequestDto dto, HttpServletRequest request);
+    ProductResponseDto crear(ProductoRequestDto dto);
 
     List<ProductResponseDto> listar(String nombre);
 
