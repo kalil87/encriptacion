@@ -27,4 +27,9 @@ public class Md5Id {
     @ManyToOne
     @JoinColumn(name = "ruta_id")
     private Md5Ruta ruta;
+
+    public Md5Id(Long entidadId, String idHash) {
+        this.entidadId = entidadId;
+        this.idHash = idHash;
+    }
 }

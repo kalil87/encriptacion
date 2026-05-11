@@ -9,8 +9,10 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -31,12 +33,20 @@ public class HashRoutingFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
+        if (uri.startsWith("/api")) {
+            response.sendError(HttpStatus.NOT_FOUND.value());
+            return;
+        }
+
+        if (uri.startsWith("/")) {
+            uri = uri.substring(1);
+        }
+
         String[] partes = uri.split("/");
 
+        if (partes.length >= 1) {
 
-        if (partes.length >= 2) {
-
-            String rutaHash = partes[1];
+            String rutaHash = partes[0];
 
             Optional<Md5Ruta> rutaOpt = rutaRepository.findByRutaHash(rutaHash);
 
@@ -44,8 +54,7 @@ public class HashRoutingFilter extends OncePerRequestFilter {
 
                 Md5Ruta ruta = rutaOpt.get();
 
-
-                if (partes.length == 2) {
+                if (partes.length == 1) {
 
                     RequestDispatcher dispatcher = request.getRequestDispatcher(ruta.getRutaReal());
 
@@ -54,10 +63,9 @@ public class HashRoutingFilter extends OncePerRequestFilter {
                     return;
                 }
 
+                if (partes.length == 2) {
 
-                if (partes.length == 3) {
-
-                    String idHash = partes[2];
+                    String idHash = partes[1];
 
                     Optional<Md5Id> idOpt = idRepository.findByIdHash(idHash);
 
@@ -72,8 +80,14 @@ public class HashRoutingFilter extends OncePerRequestFilter {
                         dispatcher.forward(request, response);
 
                         return;
+                    } else {
+                        response.sendError(HttpStatus.NOT_FOUND.value());
+                        return;
                     }
                 }
+            } else {
+                response.sendError(HttpStatus.NOT_FOUND.value());
+                return;
             }
         }
 

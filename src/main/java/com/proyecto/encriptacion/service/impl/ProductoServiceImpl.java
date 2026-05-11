@@ -28,11 +28,8 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = ProductoMapper.toEntity(dto);
         Producto guardado = productoRepository.save(producto);
 
-        String rutaReal = request.getRequestURI()
-                .replaceAll("/$", "");
-
-        Md5Ruta ruta = md5RutaService
-                .obtenerOCrearRuta(rutaReal);
+        String rutaReal = request.getRequestURI().replaceAll("/$", "");
+        Md5Ruta ruta = md5RutaService.obtenerOCrearRuta(rutaReal);
 
         md5RutaService.agregarId(ruta, guardado.getId());
 

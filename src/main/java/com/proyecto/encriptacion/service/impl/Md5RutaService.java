@@ -3,6 +3,8 @@ package com.proyecto.encriptacion.service.impl;
 import com.proyecto.encriptacion.entity.Md5Id;
 import com.proyecto.encriptacion.entity.Md5Ruta;
 import com.proyecto.encriptacion.repository.Md5RutaRepository;
+import com.proyecto.encriptacion.utils.SistemaNumeracion;
+import com.proyecto.encriptacion.utils.VariantesHash;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -20,10 +22,7 @@ public class Md5RutaService {
         return rutaRepository.findByRutaReal(rutaReal)
                 .orElseGet(() -> {
 
-                    Md5Ruta ruta = new Md5Ruta();
-
-                    ruta.setRutaReal(rutaReal);
-                    ruta.setRutaHash(generarMd5(rutaReal));
+                    Md5Ruta ruta = new Md5Ruta(rutaReal, generarMd5(rutaReal));
 
                     return rutaRepository.save(ruta);
                 });
@@ -31,20 +30,17 @@ public class Md5RutaService {
 
     public void agregarId(Md5Ruta ruta, Long entidadId) {
 
-        boolean existe = ruta.getIds().stream()
+        boolean existe = ruta.getIds()
+                .stream()
                 .anyMatch(i -> i.getEntidadId().equals(entidadId));
 
         if (existe) {
             return;
         }
 
-        Md5Id md5Id = new Md5Id();
+        Md5Id md5Id = new Md5Id(entidadId, generarMd5(entidadId.toString()));
 
-        md5Id.setEntidadId(entidadId);
-        md5Id.setIdHash(generarMd5(entidadId.toString()));
-        md5Id.setRuta(ruta);
-
-        ruta.getIds().add(md5Id);
+        ruta.agregarId(md5Id);
 
         rutaRepository.save(ruta);
     }
@@ -52,17 +48,11 @@ public class Md5RutaService {
     private String generarMd5(String texto) {
 
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
+            MessageDigest md5 = MessageDigest.getInstance(VariantesHash.SHA_256);
 
-            byte[] digest = md.digest(texto.getBytes());
+            byte[] bytes = md5.digest(texto.getBytes());
 
-            StringBuilder sb = new StringBuilder();
-
-            for (byte b : digest) {
-                sb.append(String.format("%02x", b));
-            }
-
-            return sb.toString();
+            return SistemaNumeracion.hexadecimal(bytes);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

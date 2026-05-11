@@ -29,4 +29,14 @@ public class Md5Ruta {
 
     @OneToMany(mappedBy = "ruta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Md5Id> ids = new ArrayList<>();
+
+    public Md5Ruta(String rutaReal, String rutaHash) {
+        this.rutaReal = rutaReal;
+        this.rutaHash = rutaHash;
+    }
+
+    public void agregarId(Md5Id id) {
+        id.setRuta(this);
+        this.ids.add(id);
+    }
 }
