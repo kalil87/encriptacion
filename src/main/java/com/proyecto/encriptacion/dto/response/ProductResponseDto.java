@@ -1,4 +1,4 @@
-package com.proyecto.encriptacion.dto;
+package com.proyecto.encriptacion.dto.response;
 
 public record ProductResponseDto(
         Long id,

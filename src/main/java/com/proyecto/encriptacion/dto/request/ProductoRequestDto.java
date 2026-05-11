@@ -1,4 +1,4 @@
-package com.proyecto.encriptacion.dto;
+package com.proyecto.encriptacion.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

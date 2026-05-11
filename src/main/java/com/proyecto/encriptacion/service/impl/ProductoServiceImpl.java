@@ -1,12 +1,14 @@
 package com.proyecto.encriptacion.service.impl;
 
-import com.proyecto.encriptacion.dto.ProductResponseDto;
-import com.proyecto.encriptacion.dto.ProductoRequestDto;
+import com.proyecto.encriptacion.dto.response.ProductResponseDto;
+import com.proyecto.encriptacion.dto.request.ProductoRequestDto;
+import com.proyecto.encriptacion.entity.Md5Ruta;
 import com.proyecto.encriptacion.entity.Producto;
 import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;
 import com.proyecto.encriptacion.mapper.ProductoMapper;
 import com.proyecto.encriptacion.repository.ProductoRepository;
 import com.proyecto.encriptacion.service.ProductoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +16,23 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
     private ProductoRepository productoRepository;
+    private final Md5RutaService md5RutaService;
 
-    public ProductoServiceImpl(ProductoRepository repo) {
+    public ProductoServiceImpl(ProductoRepository repo, Md5RutaService md5RutaService) {
         productoRepository = repo;
+        this.md5RutaService = md5RutaService;
     }
 
     @Override
-    public ProductResponseDto crear(ProductoRequestDto dto) {
+    public ProductResponseDto crear(ProductoRequestDto dto, HttpServletRequest request) {
         Producto producto = ProductoMapper.toEntity(dto);
         Producto guardado = productoRepository.save(producto);
+
+        String rutaReal = request.getRequestURI().replaceAll("/$", "");
+        Md5Ruta ruta = md5RutaService.obtenerOCrearRuta(rutaReal);
+
+        md5RutaService.agregarId(ruta, guardado.getId());
+
         return ProductoMapper.toResponseDto(guardado);
     }
 
