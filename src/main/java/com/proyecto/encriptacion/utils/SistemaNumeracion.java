@@ -5,8 +5,7 @@ import java.util.HexFormat;
 
 public final class SistemaNumeracion {
 
-    private SistemaNumeracion() {
-    }
+    private SistemaNumeracion() {}
 
     public static String hexadecimal(byte[] bytes) {
         return HexFormat.of().formatHex(bytes);

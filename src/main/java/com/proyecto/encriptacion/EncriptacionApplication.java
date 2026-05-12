@@ -12,19 +12,23 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class EncriptacionApplication {
-    private static final PasswordEncoder encoder = TipoHashPassword.BCRYPT;
+    private static final PasswordEncoder encoder = TipoHashPassword.ARGON2;
 
     public static void main(String[] args) {
         String texto = "/api/encriptacion/usuarios/login";
-        System.out.println("*** Conversion del texto '" + texto + "' en hash ***");
+
+        System.out.println("\n--------------------------------------------------------------------");
+        System.out.println("\n*** Conversion del texto '" + texto + "' en hash ***");
         System.out.println(generarMd5(texto));
 
+        System.out.println("\n--------------------------------------------------------------------");
         String encriptada = encoder.encode(texto);
         System.out.println("\n*** Conversion del texto '" + texto + "' en hash password ***");
         System.out.println(encriptada);
 
         System.out.println("\n*** matcheador del texto '" + texto + "' en hash password ***");
         System.out.println(encoder.matches(texto, encriptada));
+        System.out.println("\n--------------------------------------------------------------------");
 
         SpringApplication.run(EncriptacionApplication.class, args);
     }
