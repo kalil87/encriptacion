@@ -6,6 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
 public class TipoHashPassword {
+
+    private TipoHashPassword() {}
+
     public static final PasswordEncoder BCRYPT =  new BCryptPasswordEncoder();
     public static final PasswordEncoder PBKDF2 =  Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     public static final PasswordEncoder ARGON2 =

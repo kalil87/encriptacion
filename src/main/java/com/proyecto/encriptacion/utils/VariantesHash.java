@@ -2,8 +2,7 @@ package com.proyecto.encriptacion.utils;
 
 public final class VariantesHash {
 
-    private VariantesHash() {
-    }
+    private VariantesHash() {}
 
     public static final String MD5 = "MD5";
     public static final String SHA_1 = "SHA-1";
