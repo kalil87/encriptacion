@@ -7,6 +7,7 @@ import com.proyecto.encriptacion.dto.response.UsuarioActualizadoResponse;
 import com.proyecto.encriptacion.dto.response.UsuarioResponse;
 import com.proyecto.encriptacion.entity.Md5Ruta;
 import com.proyecto.encriptacion.entity.Usuario;
+import com.proyecto.encriptacion.exception.PasswordIncorrectaException;
 import com.proyecto.encriptacion.exception.RecursoNoEncontradoException;
 import com.proyecto.encriptacion.mapper.UsuarioMapper;
 import com.proyecto.encriptacion.repository.UsuarioRepository;
@@ -75,7 +76,7 @@ public class UsuarioServiceImpl {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no registrado"));
 
         if (!encoder.matches(request.password(), usuario.getPassword())) {
-            throw new RuntimeException("Password incorrecta");
+            throw new PasswordIncorrectaException("Password incorrecta");
         }
 
         return mapper.toDto(usuario);

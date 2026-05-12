@@ -28,6 +28,21 @@ public class ManejoGlobalExcepciones {
     }
 
     /**
+     * Maneja credenciales inválidas.
+     * Retorna 401 UNAUTHORIZED.
+     */
+    @ExceptionHandler(PasswordIncorrectaException.class)
+    public ResponseEntity<RespuestaError> manejarPasswordIncorrecta(PasswordIncorrectaException ex) {
+
+        RespuestaError error = new RespuestaError(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
      * Maneja errores de validación de @Valid en request body.
      * Retorna 400 BAD REQUEST con detalles de campos inválidos.
      */
